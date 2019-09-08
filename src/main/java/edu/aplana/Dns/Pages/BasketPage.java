@@ -13,6 +13,7 @@ import static junit.framework.TestCase.assertTrue;
 public class BasketPage extends BasePage {
     WebDriver driver;
     static String total;
+    Integer count = 1;
 
     public BasketPage(WebDriver driver) {
         this.driver = driver;
@@ -53,19 +54,13 @@ public class BasketPage extends BasePage {
     }
 
     public void addProduct() {
-        /*(new WebDriverWait(driver,1500).until(ExpectedConditions.elementToBeClickable
-                (driver.findElement(By.xpath("//button[@class='count-buttons__button count-buttons__button_plus']"))))).isSelected();*/
-        driver.findElement(By.xpath("//button[@class='count-buttons__button count-buttons__button_plus']")).isEnabled();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement webElement = driver.findElement(By.xpath("//nav[@id='header-search']//span[@class='btn-cart-link__badge']"));
         driver.findElement(By.xpath("//button[@class='count-buttons__button count-buttons__button_plus']")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 10000);
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath("//button[@class='count-buttons__button count-buttons__button_plus']"))));
-        /*(new WebDriverWait(driver,1500).until(ExpectedConditions.elementToBeClickable
-                (By.xpath("//button[@class='count-buttons__button count-buttons__button_plus']")))).isSelected();*/
-
-
-        //WebElement webElement = driver.findElement(By.xpath("//button[@class='count-buttons__button count-buttons__button_plus']"));
-        //webElement.click();
-        //(new WebDriverWait(driver,10).until(ExpectedConditions.elementToBeClickable(webElement))).click();
+        String atr = webElement.getText();
+        count = Integer.parseInt(atr);
+        ++count;
+        wait.until(ExpectedConditions.textToBe(By.xpath("//nav[@id='header-search']//span[@class='btn-cart-link__badge']"), count.toString()));
     }
 
     public void checkBasket() {
@@ -75,10 +70,18 @@ public class BasketPage extends BasePage {
         assertEquals(ProductMap.get(1).getPriceProdductGarantee() * 3, parseToDouble(total));
     }
 
+    public void returnProduct(){
+        driver.findElement(By.xpath("//a[@class='restore-last-removed']")).click();
+        assertTrue(driver.findElement(By.xpath("//a[contains(text(),'Detroit')]")).isDisplayed());
+        String gamePrice = driver.findElement(By.xpath("//a[contains(text(),'Detroit')]//..//..//..//div[@class='item-price']//span")).getText();
+        assertEquals(parseToDouble(total) + parseToDouble(gamePrice),
+                parseToDouble(driver.findElement(By.xpath("//div[@class='total-amount']//div[@class='item-price']//span")).getText()));
+    }
+
     public double parseToDouble(String s) {
         s.trim();
         s = s.replaceAll("\\ ", ".");
-        double price = Double.parseDouble(s);
+        Double price = Double.parseDouble(s);
         return price;
     }
 }

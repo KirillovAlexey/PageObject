@@ -25,7 +25,6 @@ public class ProductPage extends BasePage {
     private String description;
     private String garantee;
     private static int count;
-
     @FindBy(xpath = "//select[@class='form-control select']")
     private WebElement checkGuarantee;
 
@@ -57,7 +56,6 @@ public class ProductPage extends BasePage {
 
     public void addBusket() throws InterruptedException {
         driver.findElement(ProductPurchase).click();
-        (new WebDriverWait(driver,20).until(ExpectedConditions.elementToBeClickable(driver.findElement(ProductPurchase)))).isSelected();
         if (priceProductGarantee != 0) {
             ProductMap.put(++count, this);
         } else
@@ -65,7 +63,11 @@ public class ProductPage extends BasePage {
     }
 
     public void checkPrice() {
-        assertEquals("1", ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct(),
+        WebElement webElement = driver.findElement(By.xpath("//span[@data-content='label'][contains(text(),'В корзине')]"));
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        String s = webElement.getText();
+        wait.until(ExpectedConditions.visibilityOf(webElement));
+        assertEquals((ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct() ),
                 parseToDouble(driver.findElement(By.xpath("//div[@class='buttons']//span[@data-of = 'totalPrice']")).getText()));
     }
 

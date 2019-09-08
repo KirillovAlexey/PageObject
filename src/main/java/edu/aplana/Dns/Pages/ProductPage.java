@@ -5,14 +5,26 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.concurrent.TimeUnit;
+
+import static junit.framework.TestCase.assertEquals;
 
 public class ProductPage extends BasePage {
     private WebDriver driver;
     private double priceProduct;
     private double priceProductGarantee;
     private String name;
+
+    public String getName() {
+        return name;
+    }
+
     private String description;
     private String garantee;
+    private static int count;
 
     @FindBy(xpath = "//select[@class='form-control select']")
     private WebElement checkGuarantee;
@@ -21,11 +33,6 @@ public class ProductPage extends BasePage {
         this.driver = driver;
         this.name = driver.findElement(productName).getText();
         this.description = driver.findElement(ProductDescription).getText();
-        //this.garantee = driver.findElement(ProductGarantee).getText();
-
-        /*this.priceProduct = parseToDouble(driver.findElement(productPrice).getText());
-        this.priceProductGarantee = parseToDouble(driver.findElement(productPrice).getText());*/
-
     }
 
     public double getPriceProduct() {
@@ -36,30 +43,35 @@ public class ProductPage extends BasePage {
         return priceProductGarantee;
     }
 
-    public void savePrice() {
+    public double savePrice() {
         priceProduct = parseToDouble(driver.findElement(productPrice).getText());
+        return priceProduct;
     }
 
-    public void savePriceGarantee() {
+    public double savePriceGarantee() {
         checkGuarantee.click();
         driver.findElement(chooseGarantee).click();
         priceProductGarantee = parseToDouble(driver.findElement(productPrice).getText());
+        return priceProductGarantee;
     }
 
-    public void addBusket() {
-        //WebElement webElement = driver.findElement(By.xpath("//div[contains(text(), 'Доп. гарантия - ')]"));
-        ////div[contains(text(), 'Доп. гарантия - ')]
+    public void addBusket() throws InterruptedException {
         driver.findElement(ProductPurchase).click();
-        //name = driver.findElement(productName).getText();
-        if (priceProductGarantee != 0)
-            ProductMap.put(this, this.priceProductGarantee);
-        else
-            ProductMap.put(this, this.priceProduct);
+        (new WebDriverWait(driver,20).until(ExpectedConditions.elementToBeClickable(driver.findElement(ProductPurchase)))).isSelected();
+        if (priceProductGarantee != 0) {
+            ProductMap.put(++count, this);
+        } else
+            ProductMap.put(++count, this);
+    }
+
+    public void checkPrice() {
+        assertEquals("1", ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct(),
+                parseToDouble(driver.findElement(By.xpath("//div[@class='buttons']//span[@data-of = 'totalPrice']")).getText()));
     }
 
     public double parseToDouble(String s) {
         s.trim();
-        s = s.replaceAll("\\s", ".");
+        s = s.replaceAll("\\ ", ".");
         double price = Double.parseDouble(s);
         return price;
     }

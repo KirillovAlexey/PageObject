@@ -33,7 +33,7 @@ public class BasketPage extends BasePage {
         String ps = driver.findElement(By.xpath("//a[contains(text(),'PlayStation 4 Slim Black 1 TB')]//..//..//..//div[@class='item-price']//span")).getText();
         String game = driver.findElement(By.xpath("//a[contains(text(),'Detroit')]//..//..//..//div[@class='item-price']//span")).getText();
 
-        garantee = garantee.substring(garantee.indexOf('(') + 1, garantee.indexOf(')') - 1);
+        garantee = garantee.substring(garantee.indexOf('(') + 1, garantee.indexOf(')'));
         //Проверка цены приставки в магазине с сохраненной ценой при покупке
         assertEquals(ProductMap.get(1).getPriceProdductGarantee(), parseToDouble(garantee) + parseToDouble(ps));
         //Проверка цены игры с сохраненной ценой при покупке
@@ -80,7 +80,7 @@ public class BasketPage extends BasePage {
 
     public double parseToDouble(String s) {
         s.trim();
-        s = s.replaceAll("\\ ", ".");
+        s = s.replaceAll("\\ ", "");
         Double price = Double.parseDouble(s);
         return price;
     }

@@ -73,7 +73,7 @@ public class ProductPage extends BasePage {
 
     public double parseToDouble(String s) {
         s.trim();
-        s = s.replaceAll("\\ ", ".");
+        s = s.replaceAll("\\ ", "");
         double price = Double.parseDouble(s);
         return price;
     }

@@ -12,11 +12,11 @@ public class ProductMap {
 
     public static WebDriver driver;
 
-    public static ProductPage get(Integer key){
+    public static ProductPage get(Integer key) {
         return map.get(key);
     }
 
-    public static void put(Integer key, ProductPage value){
+    public static void put(Integer key, ProductPage value) {
         map.put(key, value);
     }
 }

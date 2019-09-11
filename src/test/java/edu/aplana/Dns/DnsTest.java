@@ -96,15 +96,13 @@ public class DnsTest {
         basketPage.checkPriceProductToBasket();
         //15) удалить из корзины Detroit
         //16) проверить что Detroit нет больше в корзине и что сумма уменьшилась на цену Detroit
-        //basketPage.delete("Detroit");
+        basketPage.delete("Detroit");
         //17) добавить еще 2 playstation (кнопкой +) и проверить что сумма верна (равна трем ценам playstation)
         basketPage.addProduct(ProdProperties.getInstance().getProperty("playstation"));
-        //basketPage.addProduct(driver.findElement(By.id(name)).getText());
-        basketPage.addProduct(ProdProperties.getInstance().getProperty("game"));
-        //17) добавить еще 2 playstation (кнопкой +) и проверить что сумма верна (равна трем ценам playstation)
+        basketPage.addProduct(ProdProperties.getInstance().getProperty("playstation"));
         basketPage.checkBasket();
         //18) нажать вернуть удаленный товар, проверить что Detroit появился в корзине и сумма увеличилась на его значение
-        //basketPage.returnProduct();
+        basketPage.returnProduct();
     }
 
     @After

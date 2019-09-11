@@ -3,7 +3,6 @@ package edu.aplana.Dns;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 public class ProdProperties {
@@ -13,14 +12,14 @@ public class ProdProperties {
 
     private ProdProperties() {
         try {
-            String propertyFileName = System.getProperty("dnsShop","prod");
+            String propertyFileName = System.getProperty("dnsShop", "prod");
             properties.load(new FileInputStream(new File("src/main/resources/" + propertyFileName + ".properties")));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static ProdProperties getInstance() {
+    static ProdProperties getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new ProdProperties();
         }
@@ -31,7 +30,7 @@ public class ProdProperties {
         return properties;
     }
 
-    public String getProperty(String key) {
+    String getProperty(String key) {
         return properties.get(key).toString();
     }
 }

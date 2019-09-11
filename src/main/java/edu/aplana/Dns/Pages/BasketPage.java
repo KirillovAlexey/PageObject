@@ -1,30 +1,25 @@
 package edu.aplana.Dns.Pages;
 
 import edu.aplana.Dns.ProductMap;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 
 public class BasketPage extends BasePage {
-    WebDriver driver;
-    static String total;
-    Integer count = 1;
+    private WebDriver driver;
+    private String total;
+    private Integer count = 1;
 
-    String checkCountPos = "//nav[@id='header-search']//span[@class='btn-cart-link__badge']";
-    String sumToBasketIn = "//div[@class='total-amount']//div[@class='item-price']//span";
-    String inBasket = "//div[@class='buttons']//a[@class='btn-cart-link']";
+    private By checkCountPos = By.xpath("//nav[@id='header-search']//span[@class='btn-cart-link__badge']");
+    //String sumToBasketIn = "//div[@class='total-amount']//div[@class='item-price']//span";
+    private String inBasket = "//div[@class='buttons']//a[@class='btn-cart-link']";
+    private By sumToBasketIn = By.xpath("//div[@class='total-amount']//div[@class='item-price']//span");
 
     public BasketPage(WebDriver driver) {
         this.driver = driver;
@@ -55,46 +50,47 @@ public class BasketPage extends BasePage {
     }
 
     public void delete(String name) {
-        String xpath = String.format("//a[contains(text(),'%s')]//..//..//..//..//button[@class='remove-button']", name);
-        driver.findElement(By.xpath(xpath)).click();
-        WebElement webElement = driver.findElement(By.xpath("//a[contains(text(),'Detroit')]//..//..//..//div[@class='item-price']//span"));
-        (new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOf(webElement))).booleanValue();
-
-        total = driver.findElement(By.xpath(sumToBasketIn)).getText();
+        //String text = String.format("//a[contains(text(),'%s')]//..//..//..//..//button[@class='remove-button']", name);
+        By removeProd = By.xpath(String.format("//a[contains(text(),'%s')]//..//..//..//..//button[@class='remove-button']",name));
+        //WebElement webElement = driver.findElement(By.xpath("//a[contains(text(),'Detroit')]//..//..//..//div[@class='item-price']//span"));
+        //driver.findElement(By.xpath(xpath)).click();
+        //(new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOf(webElement))).booleanValue();
+        waitingChange(sumToBasketIn,removeProd);
+        //total = driver.findElement(sumToBasketIn).getText();
         //Проверка общей цены корзины без игры
-        assertEquals(ProductMap.get(1).getPriceProdductGarantee(), parseToDouble(total));
+        assertEquals(ProductMap.get(1).getPriceProdductGarantee(), parseToDouble(driver.findElement(sumToBasketIn).getText()));
     }
 
     public void addProduct(String s) {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        WebElement webElement = driver.findElement(By.xpath(checkCountPos));
-            String name = String.format("//a[contains(text(),'%s')]//..//..//..//button[@class='count-buttons__button count-buttons__button_plus']", s);
-            driver.findElement(By.xpath(name)).click();
-            String atr = webElement.getText();
-            count = Integer.parseInt(atr);
-            ++count;
-            wait.until(ExpectedConditions.textToBe(By.xpath(checkCountPos), count.toString()));
+        WebElement webElement = driver.findElement(checkCountPos);
+        String name = String.format("//a[contains(text(),'%s')]//..//..//..//button[@class='count-buttons__button count-buttons__button_plus']", s);
+        driver.findElement(By.xpath(name)).click();
+        String atr = webElement.getText();
+        count = Integer.parseInt(atr);
+        ++count;
+        wait.until(ExpectedConditions.textToBe(checkCountPos, count.toString()));
     }
 
     public void checkBasket() {
         WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.elementToBeClickable(By.linkText("")));
-        total = driver.findElement(By.xpath(sumToBasketIn)).getText();
+        total = driver.findElement(sumToBasketIn).getText();
         assertEquals(ProductMap.get(1).getPriceProdductGarantee() * 3, parseToDouble(total));
     }
 
-    public void returnProduct(){
-            driver.findElement(By.xpath("//a[@class='restore-last-removed']")).click();
+    public void returnProduct() {
+        driver.findElement(By.xpath("//a[@class='restore-last-removed']")).click();
         assertTrue(driver.findElement(By.xpath("//a[contains(text(),'Detroit')]")).isDisplayed());
         String gamePrice = driver.findElement(By.xpath("//a[contains(text(),'Detroit')]//..//..//..//div[@class='item-price']//span")).getText();
-        /*assertEquals(parseToDouble(total) + parseToDouble(gamePrice),
-                parseToDouble(driver.findElement(By.xpath(sumToBasketIn)).getText()));*/
+        assertEquals(parseToDouble(total) + parseToDouble(gamePrice),
+                parseToDouble(driver.findElement(sumToBasketIn).getText()));
     }
 
-    public double parseToDouble(String s) {
+    private double parseToDouble(String s) {
         s.trim();
         s = s.replaceAll("\\ ", "");
-        Double price = Double.parseDouble(s);
+        double price = Double.parseDouble(s);
         return price;
     }
 }

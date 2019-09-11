@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import sun.applet.Main;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,13 +17,13 @@ public class ProductPage extends BasePage {
     private double priceProduct;
     private double priceProductGarantee;
     private String name;
-    final By productPrice = By.xpath("//div[@class='clearfix']//span[@class='current-price-value']");
-    final By productName = By.xpath("//h1[@class='page-title price-item-title']");
-    final By ProductDescription = By.xpath("//p[ancestor::div[@itemprop='description']]");
-    final By ProductPurchase = By.xpath("//button[@class='btn btn-cart btn-lg']");
-    final By chooseGarantee = By.xpath("//select[@class='form-control select']//option[@value='2']");
-    final By checkToBasket = By.xpath("//span[@data-content='label'][contains(text(),'В корзине')]");
-    final By totalPriceBasket = By.xpath("//div[@class='buttons']//span[@data-of = 'totalPrice']");
+    private final By productPrice = By.xpath("//div[@class='clearfix']//span[@class='current-price-value']");
+    private final By productName = By.xpath("//h1[@class='page-title price-item-title']");
+    private final By ProductDescription = By.xpath("//p[ancestor::div[@itemprop='description']]");
+    private final By ProductPurchase = By.xpath("//button[@class='btn btn-cart btn-lg']");
+    private final By chooseGarantee = By.xpath("//select[@class='form-control select']//option[@value='2']");
+    private final By checkToBasket = By.xpath("//span[@data-content='label'][contains(text(),'В корзине')]");
+    private final By totalPriceBasket = By.xpath("//div[@class='buttons']//span[@data-of = 'totalPrice']");
 
     public String getName() {
         return name;
@@ -42,11 +41,11 @@ public class ProductPage extends BasePage {
         this.description = driver.findElement(ProductDescription).getText();
     }
 
-    public double getPriceProduct() {
+    double getPriceProduct() {
         return priceProduct;
     }
 
-    public double getPriceProdductGarantee() {
+    double getPriceProdductGarantee() {
         return priceProductGarantee;
     }
 
@@ -63,23 +62,23 @@ public class ProductPage extends BasePage {
     }
 
     public void addBusket() {
-        driver.findElement(ProductPurchase).click();
+        //driver.findElement(ProductPurchase).click();
         if (priceProductGarantee != 0) {
+            waitingChange(totalPriceBasket, ProductPurchase);
             ProductMap.put(++count, this);
-        } else
+        } else {
+            waitingChange(totalPriceBasket, ProductPurchase);
             ProductMap.put(++count, this);
+        }
     }
 
     public void checkPrice() {
-        WebElement webElement = driver.findElement(checkToBasket);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        String s = webElement.getText();
-        wait.until(ExpectedConditions.visibilityOf(webElement));
-        assertEquals((ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct() ),
+        driver.manage().timeouts().implicitlyWait(1000, TimeUnit.SECONDS);
+        assertEquals((ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct()),
                 parseToDouble(driver.findElement(totalPriceBasket).getText()));
     }
 
-    public double parseToDouble(String s) {
+    private double parseToDouble(String s) {
         s.trim();
         s = s.replaceAll("\\ ", "");
         double price = Double.parseDouble(s);

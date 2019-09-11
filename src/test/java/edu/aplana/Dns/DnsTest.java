@@ -4,11 +4,12 @@ import edu.aplana.Dns.Pages.BasketPage;
 import edu.aplana.Dns.Pages.MainPage;
 import edu.aplana.Dns.Pages.ProductPage;
 import edu.aplana.Dns.Pages.SearchPage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 
 /*
@@ -31,21 +32,33 @@ import org.openqa.selenium.chrome.ChromeDriver;
 17) добавить еще 2 playstation (кнопкой +) и проверить что сумма верна (равна трем ценам playstation)
 18) нажать вернуть удаленный товар, проверитьчто Detroit появился в корзине и сумма увеличилась на его значение
  */
+
 public class DnsTest {
     private static WebDriver driver;
     private static String url;
+    static String name;
+    /*public DnsTest(String name){
+        this.name = name;
+    }*/
+    public static Collection<Object[]> data(){
+        Object[][] data = new Object[][]{
+                {"PlayStation 4 Slim Black 1 TB + 3 игры"},
+                {"Detroit: Стать человеком"}
+        };
+        return Arrays.asList(data);
+    }
 
     @Before
     public void init() {
-        System.setProperty("webdriver."+TestProperties.getInstance().getProperty("browser")+".driver", TestProperties.getInstance().getProperty("path.chrome"));
+        System.setProperty("webdriver."+ DevProperties.getInstance().getProperty("browser")+".driver", DevProperties.getInstance().getProperty("path.chrome"));
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        url = TestProperties.getInstance().getProperty("url");
+        url = DevProperties.getInstance().getProperty("url");
         ProductMap.driver = driver;
     }
 
     @Test
-    public void dnsShop() throws InterruptedException {
+    public void dnsShop() {
 
         //1) открыть dns-shop
         driver.get(url);
@@ -83,14 +96,15 @@ public class DnsTest {
         basketPage.checkPriceProductToBasket();
         //15) удалить из корзины Detroit
         //16) проверить что Detroit нет больше в корзине и что сумма уменьшилась на цену Detroit
-        basketPage.delete("Detroit");
+        //basketPage.delete("Detroit");
         //17) добавить еще 2 playstation (кнопкой +) и проверить что сумма верна (равна трем ценам playstation)
-        basketPage.addProduct();
-        basketPage.addProduct();
+        basketPage.addProduct(ProdProperties.getInstance().getProperty("playstation"));
+        //basketPage.addProduct(driver.findElement(By.id(name)).getText());
+        basketPage.addProduct(ProdProperties.getInstance().getProperty("game"));
         //17) добавить еще 2 playstation (кнопкой +) и проверить что сумма верна (равна трем ценам playstation)
         basketPage.checkBasket();
         //18) нажать вернуть удаленный товар, проверить что Detroit появился в корзине и сумма увеличилась на его значение
-        basketPage.returnProduct();
+        //basketPage.returnProduct();
     }
 
     @After

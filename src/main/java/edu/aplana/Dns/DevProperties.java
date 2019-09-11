@@ -5,13 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class TestProperties {
+public class DevProperties {
 
-    private static TestProperties INSTANCE = null;
+    private static DevProperties INSTANCE = null;
     private Properties properties = new Properties();
 
 
-    private TestProperties() {
+    private DevProperties() {
         try {
             String propertyFileName = System.getProperty("environment", "dev");
             properties.load(new FileInputStream(new File("src/main/resources/" + propertyFileName + ".properties")));
@@ -20,9 +20,9 @@ public class TestProperties {
         }
     }
 
-    public static TestProperties getInstance() {
+    public static DevProperties getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new TestProperties();
+            INSTANCE = new DevProperties();
         }
         return INSTANCE;
     }

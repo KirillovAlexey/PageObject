@@ -55,25 +55,27 @@ public class ProductPage extends BasePage {
     }
 
     public double savePriceGarantee() {
-        checkGuarantee.click();
         driver.findElement(chooseGarantee).click();
+        checkGuarantee.click();
         priceProductGarantee = parseToDouble(driver.findElement(productPrice).getText());
         return priceProductGarantee;
     }
 
     public void addBusket() {
         //driver.findElement(ProductPurchase).click();
+        //waitingChenge(totalPriceBasket);
+        waitingChange(totalPriceBasket, ProductPurchase);
         if (priceProductGarantee != 0) {
-            waitingChange(totalPriceBasket, ProductPurchase);
+            //waitingChange(totalPriceBasket, ProductPurchase);
             ProductMap.put(++count, this);
         } else {
-            waitingChange(totalPriceBasket, ProductPurchase);
+            //waitingChange(totalPriceBasket, ProductPurchase);
             ProductMap.put(++count, this);
         }
     }
 
     public void checkPrice() {
-        driver.manage().timeouts().implicitlyWait(1000, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10000,TimeUnit.SECONDS);
         assertEquals((ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct()),
                 parseToDouble(driver.findElement(totalPriceBasket).getText()));
     }

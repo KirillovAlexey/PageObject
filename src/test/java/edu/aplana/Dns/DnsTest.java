@@ -56,7 +56,7 @@ public class DnsTest {
     public static Collection<Object[]> data() {
         String[][] data = new String[][]{
                 {"playstation", "PlayStation 4 Slim Black 1 TB", "Detroit"},
-                {"ПК HP OMEN X", "HP OMEN X 900-200ur [2PV29EA]", "Red Dead Redemption 2 (PS4)"},
+                {"ПК HP OMEN X", "HP OMEN X 900-200ur [2PV29EA]", "Ace Combat 7: Skies Unknown (PS4)"},
                 {"MacBook Pro Retina", "Apple MacBook Pro Retina TB 2018 (MR962RU/A)", "Ori and the Blind Forest"}
         };
         return Arrays.asList(data);

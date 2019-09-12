@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ProductMap {
 
-    private static Map<Integer, ProductPage> map = new HashMap<>();
+    public static Map<Integer, ProductPage> map = new HashMap<>();
 
     public static WebDriver driver;
 

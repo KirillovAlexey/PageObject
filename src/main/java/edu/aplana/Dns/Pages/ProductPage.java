@@ -5,8 +5,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,9 +12,9 @@ import static junit.framework.TestCase.assertEquals;
 
 public class ProductPage extends BasePage {
     private WebDriver driver;
-    private double priceProduct;
-    private double priceProductGarantee;
-    private String name;
+    private static double priceProduct;
+    private static double priceProductGarantee;
+    private static String name;
     private final By productPrice = By.xpath("//div[@class='clearfix']//span[@class='current-price-value']");
     private final By productName = By.xpath("//h1[@class='page-title price-item-title']");
     private final By ProductDescription = By.xpath("//p[ancestor::div[@itemprop='description']]");
@@ -65,17 +63,20 @@ public class ProductPage extends BasePage {
         //driver.findElement(ProductPurchase).click();
         //waitingChenge(totalPriceBasket);
         waitingChange(totalPriceBasket, ProductPurchase);
+        //driver.findElement(ProductPurchase).click();
+
         if (priceProductGarantee != 0) {
-            //waitingChange(totalPriceBasket, ProductPurchase);
             ProductMap.put(++count, this);
+            //ProductMap.put(ProductPage.name, String.valueOf(ProductPage.priceProduct));
         } else {
-            //waitingChange(totalPriceBasket, ProductPurchase);
+            //ProductMap.put(ProductPage.name, String.valueOf(ProductPage.priceProductGarantee));
             ProductMap.put(++count, this);
         }
     }
 
     public void checkPrice() {
-        driver.manage().timeouts().implicitlyWait(10000,TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
         assertEquals((ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct()),
                 parseToDouble(driver.findElement(totalPriceBasket).getText()));
     }

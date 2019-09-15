@@ -93,7 +93,6 @@ public class DnsTest {
         ps4.addBusket();
         //8) выполнить поиск Detroit
         mainPage.search(nameRemove);
-        searchPage.chooseProduct(nameRemove);
         ProductPage game = new ProductPage(driver);
         //9) запомнить цену
         game.savePrice();

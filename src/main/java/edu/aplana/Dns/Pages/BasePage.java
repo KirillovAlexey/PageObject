@@ -5,11 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 class BasePage {
@@ -26,14 +23,12 @@ class BasePage {
         Function<? super WebDriver, Object> valueChanged = new ExpectedCondition<Object>() {
             @Override
             public Boolean apply(WebDriver webDriver) {
-                return  !webDriver.findElement(by).getText().equals(oldValue);
+                return !webDriver.findElement(by).getText().equals(oldValue);
             }
         };
         //действие для изменения значения
         driver.findElement(byC).click();
-
         WebDriverWait wait = new WebDriverWait(driver, 40);
         wait.until(valueChanged);
-        //wait.until(ExpectedConditions.not(ExpectedConditions.textToBe(by, oldValue)));
     }
 }

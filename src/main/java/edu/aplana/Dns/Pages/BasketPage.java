@@ -7,7 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -36,7 +37,7 @@ public class BasketPage extends BasePage {
     }
 
     public void checkPriceProductToBasket() {
-        Double sum = 0.0;
+        double sum = 0.0;
         String ps;
         String garantee;
         String game;
@@ -45,76 +46,30 @@ public class BasketPage extends BasePage {
         List<WebElement> list = driver.findElements(By.xpath("//div[@class='cart-list__product']//div[@class='item-price']//span//" +
                 "ancestor::div[@class='cart-list__product-count-price']//preceding-sibling::div//div//a[@class='cart-list__product-name-link']"));
         List<WebElement> list1 = driver.findElements(By.xpath("//div[@class='cart-list__product-thumbnail']//div[@class='item-price']//span"));
-        HashMap<WebElement,WebElement> hashMap = new HashMap();
+        HashMap<WebElement, WebElement> hashMap = new HashMap();
         for (int i = 0; i < list.size(); i++) {
             for (int j = 0; j < list.size(); j++) {
                 hashMap.put(list.get(j), list1.get(j));
             }
         }
-        assertEquals(hashMap.size(),ProductMap.map.size()-1);
-        for (HashMap.Entry<WebElement,WebElement> hash: hashMap.entrySet()) {
-            for (HashMap.Entry<String,Double> map: ProductMap.map.entrySet()) {
+        assertEquals(hashMap.size(), ProductMap.map.size() - 1);
+        for (HashMap.Entry<WebElement, WebElement> hash : hashMap.entrySet()) {
+            for (HashMap.Entry<String, Double> map : ProductMap.map.entrySet()) {
                 //Проверка цены игры.
                 //Проверка цены игры с сохраненной ценой при покупке
-                if(hash.getKey().getText().equals(map.getKey())){
+                if (hash.getKey().getText().equals(map.getKey())) {
                     assertEquals(map.getValue(), parseToDouble(hash.getValue().getText()));
-                    }
+                }
                 //Проверка цены игры с гарантией.
-                if( (hash.getKey().getText().concat(" с гарантией")).equals(map.getKey())) {
-                    sum+=parseToDouble(garantee) + parseToDouble(hash.getValue().getText());
+                if ((hash.getKey().getText().concat(" с гарантией")).equals(map.getKey())) {
+                    sum += parseToDouble(garantee) + parseToDouble(hash.getValue().getText());
                     assertEquals(map.getValue(), parseToDouble(garantee) + parseToDouble(hash.getValue().getText()));
                 }
-                //Проверка цены игры с сохраненной ценой при покупке
-                /*else if(hash.getKey().getText().contains("Игра")){
-                    sum+= parseToDouble(hash.getValue().getText());
-                    assertEquals(map.getValue(), parseToDouble(hash.getValue().getText()));
-                }*/
             }
         }
         list.clear();
         list1.clear();
         hashMap.clear();
-
-        /*HashMap<List<WebElement>, List<WebElement>> hashMap = new HashMap();
-        hashMap.put(driver.findElements(By.xpath("//div[@class='cart-list__product']//div[@class='item-price']//span//" +
-                        "ancestor::div[@class='cart-list__product-count-price']//preceding-sibling::div//div//a[@class='cart-list__product-name-link']")),
-                driver.findElements(By.xpath("//div[@class='cart-list__product']//div[@class='item-price']//span")));
-
-        for (HashMap.Entry<List<WebElement>,List<WebElement>> hash: hashMap.entrySet()) {
-            for (int i = 0; i < hash.getKey().size(); i++) {
-                System.out.println(hash.getKey().get(i).getText());
-                System.out.println(hash.getValue().get(i).getText());
-            }
-        }*/
-
-
-        /*ps = driver.findElement(By.xpath("//a[contains(text(),'PlayStation 4 Slim Black 1 TB')]//..//..//..//div[@class='item-price']//span")).getText();
-        game = driver.findElement(By.xpath("//a[contains(text(),'Detroit')]//..//..//..//div[@class='item-price']//span")).getText();
-
-        garantee = garantee.substring(garantee.indexOf('(') + 1, garantee.indexOf(')'));
-
-        for (HashMap.Entry<String,Double> hash: ProductMap.map.entrySet()) {
-            //Проверка цены приставки в магазине с сохраненной ценой при покупке
-            if(hash.getKey().contains("с гарантией")) {
-                sum+=parseToDouble(garantee)+parseToDouble(ps);
-                assertEquals(hash.getValue(), parseToDouble(garantee) + parseToDouble(ps));
-            }
-            //Проверка цены игры с сохраненной ценой при покупке
-            else if(hash.getKey().contains("Игра")){
-                sum+= parseToDouble(game);
-                assertEquals(hash.getValue(), parseToDouble(game));
-            }
-        }*/
-        //Проверка общей цены корзины с ранее сохраненными позициями
-        /*assertEquals(sum,
-        parseToDouble(garantee) + parseToDouble(ps) + parseToDouble(game));*/
-
-        //assertEquals(ProductMap.get(1).getPriceProdductGarantee(), parseToDouble(garantee) + parseToDouble(ps));
-        //Проверка цены игры с сохраненной ценой при покупке
-        //assertEquals(ProductMap.get(2).getPriceProduct(), parseToDouble(game));
-        //Проверка общей цены корзины с ранее сохраненными позициями
-        //assertEquals(ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct(),
-                //parseToDouble(garantee) + parseToDouble(ps) + parseToDouble(game));
     }
 
     public void delete(String name) {
@@ -144,7 +99,6 @@ public class BasketPage extends BasePage {
 
     public void returnProduct(String s) {
         driver.findElement(By.xpath("//a[@class='restore-last-removed']")).click();
-        //assertTrue(driver.findElement(By.xpath("//a[contains(text(),'Detroit')]")).isDisplayed());
         String gamePrice = driver.findElement(By.xpath(String.format("//a[contains(text(),'%s')]//..//..//..//div[@class='item-price']//span", s))).getText();
         assertEquals(parseToDouble(total) + parseToDouble(gamePrice),
                 parseToDouble(driver.findElement(sumToBasketIn).getText()));

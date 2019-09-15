@@ -55,9 +55,10 @@ public class DnsTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         String[][] data = new String[][]{
+                {"Xbox", "Microsoft Xbox ONE X Gears 5 Edition 1 Tb", "Far Cry 4: Classics Plus (Xbox 360)"},
                 {"playstation", "PlayStation 4 Slim Black 1 TB", "Detroit"},
-                {"ПК HP OMEN X", "HP OMEN X 900-200ur [2PV29EA]", "Ace Combat 7: Skies Unknown (PS4)"},
-                {"MacBook Pro Retina", "Apple MacBook Pro Retina TB 2018 (MR962RU/A)", "Ori and the Blind Forest"}
+                {"Nintendo Entertainment", "Nintendo Entertainment System Classic Mini", "Ace Combat 7: Skies Unknown (PS4)"},
+                {"Xbox", "Microsoft Xbox ONE X Gears 5 Edition 1 Tb", "Ori and the Blind Forest"}
         };
         return Arrays.asList(data);
     }
@@ -116,7 +117,7 @@ public class DnsTest {
         basketPage.addProduct(nameAdd);
         basketPage.checkBasket();
         //18) нажать вернуть удаленный товар, проверить что Detroit появился в корзине и сумма увеличилась на его значение
-        basketPage.returnProduct();
+        basketPage.returnProduct(nameRemove);
     }
 
     @AfterClass
@@ -126,6 +127,7 @@ public class DnsTest {
 
     @After
     public void clear() {
+        ProductMap.map.clear();
         driver.quit();
 /*        (new WebDriverWait(driver,1000).until(ExpectedConditions.elementToBeClickable
                 (By.xpath("//a[contains(text(),'')]//..//..//..//..//button[@class='remove-button']")))).click();*/

@@ -6,15 +6,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertEquals;
 
 public class ProductPage extends BasePage {
     private WebDriver driver;
-    private static double priceProduct;
-    private static double priceProductGarantee;
-    private static String name;
+    private double priceProduct;
+    private double priceProductGarantee;
+    private String name;
     private final By productPrice = By.xpath("//div[@class='clearfix']//span[@class='current-price-value']");
     private final By productName = By.xpath("//h1[@class='page-title price-item-title']");
     private final By ProductDescription = By.xpath("//p[ancestor::div[@itemprop='description']]");
@@ -30,6 +31,7 @@ public class ProductPage extends BasePage {
     private String description;
     private String garantee;
     private static int count;
+
     @FindBy(xpath = "//select[@class='form-control select']")
     private WebElement checkGuarantee;
 
@@ -60,25 +62,29 @@ public class ProductPage extends BasePage {
     }
 
     public void addBusket() {
-        //driver.findElement(ProductPurchase).click();
-        //waitingChenge(totalPriceBasket);
         waitingChange(totalPriceBasket, ProductPurchase);
-        //driver.findElement(ProductPurchase).click();
-
-        if (priceProductGarantee != 0) {
-            ProductMap.put(++count, this);
+        if (priceProductGarantee == 0) {
+            ProductMap.put(this.name, this.priceProduct);
             //ProductMap.put(ProductPage.name, String.valueOf(ProductPage.priceProduct));
         } else {
-            //ProductMap.put(ProductPage.name, String.valueOf(ProductPage.priceProductGarantee));
-            ProductMap.put(++count, this);
+            ProductMap.put(this.name, this.priceProduct);
+            ProductMap.put(this.name + " с гарантией", this.priceProductGarantee);
         }
     }
 
     public void checkPrice() {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
-        assertEquals((ProductMap.get(1).getPriceProdductGarantee() + ProductMap.get(2).getPriceProduct()),
+        Double sum= 0.0;
+        for (HashMap.Entry<String,Double> hash: ProductMap.map.entrySet()) {
+            if(hash.getKey().contains("с гарантией") || hash.getKey().contains("Игра")){
+                sum += hash.getValue();
+            }
+        }
+        assertEquals(sum,
                 parseToDouble(driver.findElement(totalPriceBasket).getText()));
+
+        /*assertEquals((ProductMap.get("").getPrice() + ProductMap.get(2).getPriceProduct()),
+                parseToDouble(driver.findElement(totalPriceBasket).getText()));*/
     }
 
     private double parseToDouble(String s) {

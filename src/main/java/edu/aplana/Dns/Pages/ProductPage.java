@@ -24,14 +24,7 @@ public class ProductPage extends BasePage {
     private final By checkToBasket = By.xpath("//span[@data-content='label'][contains(text(),'В корзине')]");
     private final By totalPriceBasket = By.xpath("//div[@class='buttons']//span[@data-of = 'totalPrice']");
 
-    public String getName() {
-        return name;
-    }
-
     private String description;
-    private String garantee;
-    private static int count;
-
     @FindBy(xpath = "//select[@class='form-control select']")
     private WebElement checkGuarantee;
 
@@ -39,14 +32,6 @@ public class ProductPage extends BasePage {
         this.driver = driver;
         this.name = driver.findElement(productName).getText();
         this.description = driver.findElement(ProductDescription).getText();
-    }
-
-    double getPriceProduct() {
-        return priceProduct;
-    }
-
-    double getPriceProdductGarantee() {
-        return priceProductGarantee;
     }
 
     public double savePrice() {
@@ -73,18 +58,16 @@ public class ProductPage extends BasePage {
     }
 
     public void checkPrice() {
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        Double sum= 0.0;
-        for (HashMap.Entry<String,Double> hash: ProductMap.map.entrySet()) {
-            if(hash.getKey().contains("с гарантией") || hash.getKey().contains("Игра")){
+        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        Double sum = 0.0;
+        for (HashMap.Entry<String, Double> hash : ProductMap.map.entrySet()) {
+            if (hash.getKey().contains("с гарантией") || hash.getKey().contains("Игра")) {
                 sum += hash.getValue();
             }
         }
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         assertEquals(sum,
                 parseToDouble(driver.findElement(totalPriceBasket).getText()));
-
-        /*assertEquals((ProductMap.get("").getPrice() + ProductMap.get(2).getPriceProduct()),
-                parseToDouble(driver.findElement(totalPriceBasket).getText()));*/
     }
 
     private double parseToDouble(String s) {

@@ -55,10 +55,9 @@ public class DnsTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         String[][] data = new String[][]{
-                {"Xbox", "Microsoft Xbox ONE X Gears 5 Edition 1 Tb", "Far Cry 4: Classics Plus (Xbox 360)"},
                 {"playstation", "PlayStation 4 Slim Black 1 TB", "Detroit"},
                 {"Nintendo Entertainment", "Nintendo Entertainment System Classic Mini", "Ace Combat 7: Skies Unknown (PS4)"},
-                {"Xbox", "Microsoft Xbox ONE X Gears 5 Edition 1 Tb", "Ori and the Blind Forest"}
+                {"Xbox", "Microsoft Xbox ONE X Gears 5 Edition 1 Tb", "Detroit"}
         };
         return Arrays.asList(data);
     }
@@ -73,7 +72,7 @@ public class DnsTest {
     }
 
     @Test
-    public void dnsShop() throws InterruptedException {
+    public void dnsShop() {
 
         //1) открыть dns-shop
         driver.get(url);
@@ -94,6 +93,7 @@ public class DnsTest {
         ps4.addBusket();
         //8) выполнить поиск Detroit
         mainPage.search(nameRemove);
+        searchPage.chooseProduct(nameRemove);
         ProductPage game = new ProductPage(driver);
         //9) запомнить цену
         game.savePrice();
@@ -129,7 +129,5 @@ public class DnsTest {
     public void clear() {
         ProductMap.map.clear();
         driver.quit();
-/*        (new WebDriverWait(driver,1000).until(ExpectedConditions.elementToBeClickable
-                (By.xpath("//a[contains(text(),'')]//..//..//..//..//button[@class='remove-button']")))).click();*/
     }
 }
